@@ -1,33 +1,35 @@
-import unicodedata
 import re
 
-def preprocess_text(input_file, output_file):
-    # Lee el contenido del archivo de entrada
-    with open(input_file, 'r', encoding='utf-8') as file:
-        text = file.read()
 
-    # Convertir a minúsculas
-    text = text.lower()
+def preProcessing(file_path):
+    try:
+        # Leer el archivo de entrada
+        with open(file_path, 'r', encoding='utf-8') as file:
+            text = file.read()
+        
+        # Convertir el texto a minúsculas y eliminar caracteres no alfanuméricos
+        text = text.lower()
+        text = re.sub(r'[^a-zA-Z0-9\sñáéíóú]', '', text)
 
-    # Quitar caracteres especiales pero mantener ñ y Ñ
-    text = re.sub(r'[^a-zñ0-9\s]', '', text)
+        # Reemplazar tildes y ñ
+        text = text.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
 
-    # Quitar tildes pero mantener ñ
-    text = ''.join(
-        c for c in unicodedata.normalize('NFKD', text)
-        if not unicodedata.combining(c) or c in ['ñ']
-    )
+        # Dividir el texto en palabras
+        words = text.split()
 
-    # Dividir en palabras
-    words = text.split()
-
-    # Escribir el resultado en un archivo de texto
-    with open(output_file, 'w', encoding='utf-8') as file:
-        for word in words:
-            file.write(f"{word}\n")  # Escribe cada palabra en una nueva línea
-
-# Usar la función
-input_file = 'in_text.txt'  # Cambia esto por el nombre de tu archivo de entrada
-output_file = 'input.txt'  # El archivo de salida será "input.txt"
-
-preprocess_text(input_file, output_file)
+        # Crear el archivo txt de salida
+        output_file_path = file_path.replace('.txt', '_assembly.txt')
+        
+        with open(output_file_path, 'wb') as output_file:
+            # Crear una cadena con las palabras separadas por saltos de línea
+            newline_words = '\n'.join(words)
+            
+            # Convertir la cadena a bytes y escribir en el archivo binario
+            output_file.write(newline_words.encode('utf-8'))
+        
+        print(f"Preprocesamiento completado. Archivo guardado como: {output_file_path}")
+    
+    except FileNotFoundError:
+        print("Archivo no encontrado. Por favor, verifica la ruta e intenta nuevamente.")
+    except Exception as e:
+        print(f"Ha ocurrido un error: {e}")
