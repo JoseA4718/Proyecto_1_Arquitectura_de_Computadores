@@ -1,8 +1,8 @@
     .global _start
 
     .section .data
-    buffer:      .space 10485760 // 10MB buffer
-    dictionary:   .space 1400000 // 2MB dictionary
+    buffer:      .space 10000000 // 10MB buffer
+    dictionary:   .space 2000000 // 2MB dictionary
     finaltext:   .space 1000     // 1KB final text
     character:    .space 1       // 1B character            
     word:         .space 30      // 30B word space, to store the word            
