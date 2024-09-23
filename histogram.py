@@ -30,12 +30,18 @@ def process_histogram(input_file):
     frequencies = list(word_freq.values())
 
     plt.figure(figsize=(10, 6))
-    plt.bar(words, frequencies, color='skyblue')
+    bars = plt.bar(words, frequencies, color='skyblue')
     plt.xlabel('Palabras')
     plt.ylabel('Frecuencia')
     plt.title('Histograma de Frecuencia de Palabras')
     plt.xticks(rotation=45)
     plt.tight_layout()
+
+    # Agregar el valor exacto encima de cada barra
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, height, f'{int(height)}', 
+                 ha='center', va='bottom')
 
     # Guardar el histograma como imagen
     plt.savefig('histograma.png')
